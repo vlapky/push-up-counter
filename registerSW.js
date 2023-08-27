@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/push-up-counter/sw.js', { scope: '/push-up-counter/' })})}
