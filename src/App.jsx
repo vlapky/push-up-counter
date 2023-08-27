@@ -80,15 +80,23 @@ function App() {
         alignItems="center"
       >
         <Typography variant="h5">Подсчет подходов</Typography>
-        <Button onClick={() => setOpenAdding(true)} variant="outlined">
+        <Button
+          onClick={() => setOpenAdding(true)}
+          variant="outlined"
+          fullWidth
+        >
           Добавить упражнение
         </Button>
-        <Button onClick={() => setOpenCopyResult(true)} variant="outlined">
+        <Button
+          onClick={() => setOpenCopyResult(true)}
+          variant="outlined"
+          fullWidth
+        >
           Скопировать результаты
         </Button>
       </Stack>
 
-      <List sx={{ width: "100%", maxWidth: 800, bgcolor: "background.paper" }}>
+      <List sx={{ padding: "0 16px" }}>
         {Object.keys(counters).map((id) => {
           const { name, counter } = counters[id];
 
@@ -96,7 +104,7 @@ function App() {
             <Fragment key={id}>
               <ListItem
                 secondaryAction={
-                  <>
+                  <Stack direction="row" spacing={{ xs: 0 }}>
                     <IconButton
                       edge="end"
                       aria-label="clear"
@@ -111,7 +119,7 @@ function App() {
                     >
                       <CloseIcon />
                     </IconButton>
-                  </>
+                  </Stack>
                 }
               >
                 <ListItemButton onClick={() => setEditingId(id)}>

@@ -20,7 +20,9 @@ export const AddingDrower = ({ open, onClose, onOpen, onAdd }) => {
   };
 
   const handleAdd = () => {
-    if (input === "") {
+    if (input.trim() === "") {
+      setInput("");
+      onClose();
       return;
     }
     onAdd(input);
@@ -37,17 +39,20 @@ export const AddingDrower = ({ open, onClose, onOpen, onAdd }) => {
     >
       <Box sx={{ padding: "16px" }}>
         <Typography variant="h5">Новое упражнение</Typography>
-        <TextField
-          value={input}
-          onChange={handleChange}
-          autoFocus
-          margin="dense"
-          id="exercise"
-          label="Название"
-          type="text"
-          fullWidth
-          variant="standard"
-        />
+        {open && (
+          <TextField
+            value={input}
+            onChange={handleChange}
+            autoFocus
+            margin="dense"
+            id="exercise"
+            label="Название"
+            multiline
+            fullWidth
+            variant="standard"
+            onKeyDown={(e) => e.key === "Enter" && handleAdd()}
+          />
+        )}
         <Box height={24} />
         <Button fullWidth onClick={handleAdd} variant="outlined">
           Добавить

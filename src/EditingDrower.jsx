@@ -3,6 +3,7 @@ import {
   Button,
   IconButton,
   Snackbar,
+  Stack,
   SwipeableDrawer,
   TextField,
   Typography,
@@ -18,12 +19,20 @@ export const EditingDrower = ({ id, counters, onClose, onOpen, onEdit }) => {
     setInput(e.target.value);
   };
 
+  const handleCreateAdd = (num) => () => {
+    setInput((prev) =>
+      isNaN(Number(prev)) ? num : String(Number(prev) + num)
+    );
+  };
+
   const handleClose = () => {
     setInput("");
     onClose();
   };
   const handleEdit = () => {
-    if (input === "") {
+    if (input.trim() === "") {
+      setInput("");
+      onClose();
       return;
     }
     if (isNaN(Number(input))) {
@@ -47,17 +56,35 @@ export const EditingDrower = ({ id, counters, onClose, onOpen, onEdit }) => {
         <TextField
           value={input}
           onChange={handleChange}
-          autoFocus
+          onKeyDown={(e) => e.key === "Enter" && handleEdit()}
           margin="dense"
           id="count"
           label="Добавить подход"
-          type="text"
+          multiline
           fullWidth
           variant="standard"
         />
-        <Box height={24} />
+        <Box height={16} />
 
-        <Button onClick={handleEdit} fullWidth variant='outlined'>Добавить</Button>
+        <Stack direction="row" spacing={{ xs: 1 }}>
+          <Button fullWidth variant="outlined" onClick={handleCreateAdd(1)}>
+            +1
+          </Button>
+          <Button fullWidth variant="outlined" onClick={handleCreateAdd(5)}>
+            +5
+          </Button>
+          <Button fullWidth variant="outlined" onClick={handleCreateAdd(10)}>
+            +10
+          </Button>
+          <Button fullWidth variant="outlined" onClick={handleCreateAdd(50)}>
+            +50
+          </Button>
+        </Stack>
+        <Box height={16} />
+
+        <Button onClick={handleEdit} fullWidth variant="outlined">
+          Добавить
+        </Button>
       </Box>
 
       <Snackbar

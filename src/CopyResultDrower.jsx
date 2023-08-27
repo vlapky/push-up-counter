@@ -1,18 +1,36 @@
 import {
   Box,
   IconButton,
+  Snackbar,
   Stack,
   SwipeableDrawer,
+  TextField,
   Typography,
 } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import { calcContent, calcContentForCopy, calcCurrentDate } from "./utils";
-import { Fragment } from "react";
+import { calcContentForCopy } from "./utils";
+import { useEffect, useState } from "react";
+import CloseIcon from "@mui/icons-material/Close";
 
 export const CopyResultDrower = ({ open, onClose, onOpen, counters }) => {
+  const copyContent = calcContentForCopy(counters);
+  const [copyText, setCopyText] = useState(copyContent);
+  const [isOpenSnack, setOpenSnack] = useState(false);
+
   const handleCopy = () => {
-    navigator.clipboard.writeText(calcContentForCopy(counters));
+    const copyEl = document.getElementById("copy");
+    copyEl.select();
+    copyEl.setSelectionRange(0, 99999);
+    document.execCommand("copy");
+    document.getSelection().removeAllRanges();
+    copyEl.blur();
+
+    setOpenSnack(true);
   };
+
+  useEffect(() => {
+    setCopyText(copyContent);
+  }, [open, copyContent]);
 
   return (
     <SwipeableDrawer
@@ -32,17 +50,36 @@ export const CopyResultDrower = ({ open, onClose, onOpen, counters }) => {
             <ContentCopyIcon />
           </IconButton>
         </Stack>
-        <Typography variant="body1">{calcCurrentDate()}</Typography>
-        {Object.keys(counters).map((id) => {
-          const { name, counter } = counters[id];
-          return (
-            <Fragment key={id}>
-              <Typography variant="body1">{name}</Typography>
-              <Typography variant="body1">{calcContent(counter)}</Typography>
-            </Fragment>
-          );
-        })}
+        <TextField
+          multiline
+          id="copy"
+          value={copyText}
+          onChange={(e) => setCopyText(e.target.value)}
+          fullWidth
+          sx={{ marginTop: 1 }}
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellcheck="false"
+        />
       </Box>
+
+      <Snackbar
+        open={isOpenSnack}
+        autoHideDuration={2000}
+        onClose={() => setOpenSnack(false)}
+        message="Скопировано"
+        anchorOrigin={{ horizontal: "left", vertical: "top" }}
+        action={
+          <IconButton
+            size="small"
+            aria-label="close"
+            color="inherit"
+            onClick={() => setOpenSnack(false)}
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        }
+      />
     </SwipeableDrawer>
   );
 };
